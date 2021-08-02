@@ -15,13 +15,5 @@ if leap
   puts "This year is leap"
 end
 
-num = 0
-sum = 0
-
-while num < month - 1
-  sum += months[num]
-  num += 1
-end
-
-number_day = day + sum
+number_day = months.take(month-1).sum + day
 puts "Number this day in year is: #{number_day}"
