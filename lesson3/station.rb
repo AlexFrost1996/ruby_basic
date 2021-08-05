@@ -13,7 +13,6 @@
 =end
 
 class Station
-
   attr_reader :trains, :name 
   
   def initialize(name)
@@ -22,15 +21,14 @@ class Station
   end
 
   def take_train(train)
-    @trains << train
+    trains << train
   end
 
   def send_train(train)
-    @trains.delete(train)
+    trains.delete(train)
   end
 
   def train_by_type(type)
-    @trains.each{|train| train.type == type}.size
+    trains.each{|train| train.type == type}.size
   end
-  
 end
