@@ -69,13 +69,13 @@ class Train
     return unless next_station
     current_station.send_train(self)
     next_station.take_train(self)
-    @current_station += 1
+    @current_station_index += 1
   end
 
   def move_back
     return unless previous_station
     current_station.send_train(self)
     previous_station.take_train(self)
-    @current_station -= 1
+    @current_station_index -= 1
   end
 end
