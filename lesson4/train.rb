@@ -56,21 +56,3 @@ class Train
   #The user will be able to change the route without resorting to the corresponding method
   attr_writer :route
 end
-
-class PassengerTrain < Train
-  attr_reader :type_train
-
-  def initialize(number)
-    super
-    @type_train = :passenger
-  end
-end
-
-class CargoTrain < Train
-  attr_reader :type_train
-
-  def initialize(number)
-    super
-    @type_train = :cargo
-  end
-end
