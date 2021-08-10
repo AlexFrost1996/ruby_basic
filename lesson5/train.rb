@@ -26,11 +26,11 @@ class Train
   end
 
   def add_carriages(carriage)
-    carriages << carriage if speed.zero? && type_train == carriage.type
+    carriages << carriage if speed.zero? && type == carriage.type
   end
 
   def remove_carriages(carriage)
-    carriages.delete(carriage) if speed.zero? && type_train == carriage.type
+    carriages.delete(carriage) if speed.zero? && type == carriage.type
   end
 
   def current_route
