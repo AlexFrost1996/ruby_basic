@@ -2,17 +2,17 @@ class Train
   include Manufacturer, InstanceCounter
   attr_reader :number, :carriages, :route
   attr_accessor :speed
-  @@object_train = []
+  @@trains = []
 
-  def self.find(need_number)
-    @@object_train.each{|train| train.number == need_number}
+  def self.find(number)
+    @@trains.each{|train| train.number == number}
   end
   
   def initialize (number)
     @number = number
     @carriages = []
     @speed = 0
-    @@object_train << self
+    @@trains << self
   end
 
   def stop
