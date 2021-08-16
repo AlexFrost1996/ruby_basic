@@ -1,5 +1,5 @@
 class Route
-  include InstanceCounter
+  include InstanceCounter, Validate
   attr_reader :stations
 
   def initialize(start_station, finish_station)
@@ -7,11 +7,11 @@ class Route
     validate!
   end
 
-  def add_station(station)
+  def add_station!(station)
     stations.insert(-2, station)
   end
 
-  def delete_station(station)
+  def delete_station!(station)
     stations.delete(station)
   end
 

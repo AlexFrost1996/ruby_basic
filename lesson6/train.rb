@@ -1,5 +1,5 @@
 class Train
-  include Manufacturer, InstanceCounter
+  include Manufacturer, InstanceCounter, Validate
   attr_reader :number, :carriages, :route
   attr_accessor :speed
   @@trains = []
@@ -13,8 +13,8 @@ class Train
     @number = number
     @carriages = []
     @speed = 0
-    @@trains << self
     validate!
+    @@trains << self
   end
 
   def stop
@@ -61,20 +61,15 @@ class Train
     @current_station_index -= 1
   end
 
-  def valid?
-    validate!
-    true
-  rescue
-    false
-  end
-
   protected
 
   attr_writer :route
 
   def validate!
-    raise "Number can't be nil" if number.nil?
-    raise "Number should be at least 5 symbols" if number.length < 5
-    raise "Number has invalid format" if number !~ NUMBER_FORMAT
+    errors = []
+    errors << "Number can't be nil" if number.nil?
+    errors << "Number should be at least 5 symbols" if number.length < 5
+    errors << "Number has invalid format" if number !~ NUMBER_FORMAT
+    raise errors.join(". ") unless errors.empty?
   end
 end

@@ -1,5 +1,5 @@
 class Station
-  include InstanceCounter
+  include InstanceCounter, Validate
   attr_reader :trains, :name 
   @@stations = []
 
@@ -10,8 +10,8 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    @@stations << self
     validate!
+    @@stations << self
   end
 
   def take_train(train)
@@ -25,8 +25,10 @@ class Station
   private
 
   def validate!
-    raise "Name can't be nil!" if name.nil?
-    raise "Name must be a symbol!" if name.class != Symbol
-    raise "Name length must be at least 3" if name.length < 3
+    errors = []
+    errors << "Name can't be nil!" if name.nil?
+    errors << "Name must be a symbol!" if name.class != Symbol
+    errors << "Name length must be at least 3" if name.to_s.length < 3
+    raise errors.join(". ") unless errors.empty?
   end
 end

@@ -1,16 +1,17 @@
+require_relative 'manufacturer.rb'
+require_relative 'instance_counter.rb'
+require_relative 'validate.rb'
 require_relative 'station.rb'
 require_relative 'route.rb'
 require_relative 'train.rb'
 require_relative 'passenger_train.rb'
 require_relative 'cargo_train.rb'
 require_relative 'carriages.rb'
-require_relative 'manufacturer.rb'
-require_relative 'instance_counter.rb'
 
 MENU = [
   {index: 1, title: "create new station", action: :create_new_station},
   {index: 2, title: "create new train", action: :create_new_train},
-  {index: 3, title: "create new route and manage on it", action: :create_new_route},
+  {index: 3, title: "create new route and manage on it", action: :manage_route},
   {index: 4, title: "set route for train", action: :set_route_for_train},
   {index: 5, title: "add carriages to the train", action: :add_carriages_to_train},
   {index: 6, title: "remove carriages from the train", action: :remove_carriages_from_train},
@@ -18,15 +19,40 @@ MENU = [
   {index: 8, title: "view the list of stations and the list of trains at the station", action: :view_station_and_trains}
 ]
 
+=begin
+MENU_TRAIN = [
+  {index: 1, title: "create passenger train", action: :create_passenger_train},
+  {index: 2, title: "create cargo train", action: :create_cargo_train}
+] 
+=end
+
+MENU_ROUTE = [
+  {index: 1, title: "create new route", action: :create_new_route},
+  {index: 2, title: "add station on route", action: :add_station},
+  {index: 3, title: "delete station on route", action: :delete_station}
+]
+
+MENU_MOVE_TRAIN = [
+  {index: 1, title: "move train or route to next station", action: :move_train_forward},
+  {index: 2, title: "move train on route to previous station", action: :move_train_back}
+]
+
 def create_new_station
   puts "Enter name of new Class station: "
-  station = gets.chomp
+  station = gets.chomp.to_sym
 
-  puts "Enter name of the new station: "
-  name = gets.chomp.to_sym
+  begin
+    puts "Enter name of the new station: "
+    name = gets.chomp.to_sym
+    station = Station.new(name)
+  
+    puts "Created new station #{station}" if station.valid?
 
-  station = Station.new(name)
-  puts station
+  rescue RuntimeError => e
+    puts "Invalid data for the station! Error(s): #{e}"
+    puts "Repeat enter data for the station"
+    retry
+  end
 end
 
 def create_new_train
@@ -34,76 +60,72 @@ def create_new_train
   train = gets.chomp.to_sym
 
   begin
+    puts "Enter 1 for create passenger train"
+    puts "Enter 2 for create cargo train"
+    choice = gets.chomp.to_i
+
     puts "Enter number of the new train: "
     number = gets.chomp.to_s
 
-    puts "Enter type of the new train: "
-    type = gets.chomp.to_sym
-
-    if type == :passenger
+    if choice == 1
       train = PassengerTrain.new(number)
       puts "Created new train: #{train}"
       
-    elsif type == :cargo
+    elsif choice == 2
       train = CargoTrain.new(number)
       puts "Created new train: #{train}"
   
     else
-      raise "Invalid type train!"
+      puts "Error! Please, repeat enter!"
     end
 
   rescue RuntimeError => e
-    puts "Invalid number train! Error: #{e}"
-    puts "Repeat enter number or type of train"
+    puts "Invalid data for the train! Error(s): #{e}"
+    puts "Repeat enter data for the train"
     retry
   end
 end
 
-def create_new_route
-  puts "Enter 'new' for create new route"
-  puts "Enter 'manage' for manage the station on route"
-  choise = gets.chomp.to_sym
-
-  if choise == :new
-    puts "Enter name new class route"
-    route = gets.chomp
-    puts "Enter first station on route"
-    first_station = gets.chomp.to_sym
-    puts "Enter last station on roune"
-    last_station = gets.chomp.to_sym
-    route = Route.new(first_station, last_station)
-    puts route
-
-  elsif choise == :manage
-    puts "Enter 'add' for add station on route"
-    puts "Enter 'delete' for delete station on route"
-    choise = gets.chomp.to_sym
-
-    if choise == :add
-      puts "Enter name class new station on route"
-      station = gets.chomp
-      puts "Enter route for add station"
-      route = gets.chomp
-      route.add_station(station)
-
-    elsif choise == :delete
-      puts "Enter name class station for delete"
-      station = gets.chomp
-      puts "Enter route for delete station on it"
-      route = gets.chomp
-      route.delete_station(station)
-
-    else
-      puts "Error!"
-    end
-  end
+def manage_route
+  puts "Enter your choice"
+  MENU_ROUTE.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  choice = gets.chomp.to_i
+  need_item = MENU_ROUTE.find{|item| item[:index] == choice}
+  send(need_item[:action])
 end  
+
+def create_new_route
+  puts "Enter name new class route"
+  route = gets.chomp.to_sym
+  puts "Enter first station on route"
+  first_station = gets.chomp.to_sym
+  puts "Enter last station on roune"
+  last_station = gets.chomp.to_sym
+  route = Route.new(first_station, last_station)
+  puts route
+end
+
+def add_station
+  puts "Enter name class new station on route"
+  station = gets.chomp.to_sym
+  puts "Enter route for add station"
+  route = gets.chomp.to_sym
+  route.add_station!(station)
+end
+
+def delete_station
+  puts "Enter name class station for delete"
+  station = gets.chomp.to_sym
+  puts "Enter route for delete station on it"
+  route = gets.chomp.to_sym
+  route.delete_station!(station)
+end
 
 def set_route_for_train
   puts "Enter name class train for set route"
-  train = gets.chomp
+  train = gets.chomp.to_sym
   puts "Entere name class route for this train"
-  route = gets.chomp
+  route = gets.chomp.to_sym
   train.set_route(route)
 end
 
@@ -114,7 +136,7 @@ def add_carriages_to_train
   carriages = gets.chomp
   train.add_carriages(carriages)
   puts "Error, train not stop!" unless speed.zero?
-  puts "Error of type carriages" unless train.type_train == carriages.type
+  puts "Error of type carriages" unless train.type == carriages.type
 end
 
 def remove_carriages_from_train
@@ -124,27 +146,27 @@ def remove_carriages_from_train
   carriages = gets.chomp
   train.remove_carriages(carriages)
   puts "Error, train not stop!" unless speed.zero?
-  puts "Error of type carriages" unless train.type_train == carriages.type
+  puts "Error of type carriages" unless train.type == carriages.type
 end
 
 def move_train_on_route
-  puts "Enter 'forward' for move to next station"
-  puts "Enter 'back' for move to previous station"
-  choise = gets.chomp.to_sym
+  puts "Enter your choice"
+  MENU_MOVE_TRAIN.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  choice = gets.chomp.to_i
+  need_item = MENU_MOVE_TRAIN.find{|item| item[:index] == choice}
+  send(need_item[:action])
+end
 
-  if choise == :forward
-    puts "Enter name class train for move to next station"
-    train = gets.chomp
-    train.move_forward
-    
-  elsif choise == :back
-    puts "Enter name class train for move to previous station"
-    train = gets.chomp
-    train.move_back
-    
-  else
-    puts "Error!"
-  end
+def move_train_forward
+  puts "Enter name class train for move to next station"
+  train = gets.chomp.to_sym
+  train.move_forward
+end
+
+def move_train_back
+  puts "Enter name class train for move to previous station"
+  train = gets.chomp.to_sym
+  train.move_back
 end
 
 def view_station_and_trains
