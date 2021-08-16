@@ -69,11 +69,11 @@ def create_new_train
 
     if choice == 1
       train = PassengerTrain.new(number)
-      puts "Created new train: #{train}"
+      puts "Created new train: #{train}" if train.valid?
       
     elsif choice == 2
       train = CargoTrain.new(number)
-      puts "Created new train: #{train}"
+      puts "Created new train: #{train}" if train.valid?
   
     else
       puts "Error! Please, repeat enter!"
