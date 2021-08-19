@@ -22,7 +22,7 @@ MENU = [
   {index: 7, title: "remove carriages from the train", action: :remove_carriages_from_train},
   {index: 8, title: "move train on the route", action: :move_train_on_route},
   {index: 9, title: "show stations and trains at the station", action: :show_station_and_trains},
-  {index: 10, title: "show train and carriages on train", action: :show_train_and_carriages}
+  {index: 10, title: "show train and carriages on train", action: :show_train_and_carriages},
   {index: 11, title: "take place in carriage", action: :take_place},
   {index: 12, title: "occupy volume in carriage", action: :occupy_volume}
 ]
