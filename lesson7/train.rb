@@ -61,7 +61,7 @@ class Train
     @current_station_index -= 1
   end
 
-  def each_carriages(&block)
+  def each_carriage(&block)
     carriages.each{|carriage| yield(carriage)}
   end
 

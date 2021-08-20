@@ -6,9 +6,9 @@ require_relative 'route.rb'
 require_relative 'train.rb'
 require_relative 'passenger_train.rb'
 require_relative 'cargo_train.rb'
-require_relative 'carriages.rb'
-require_relative 'passenger_carriages.rb'
-require_relative 'cargo_carriages.rb'
+require_relative 'carriage.rb'
+require_relative 'passenger_carriage.rb'
+require_relative 'cargo_carriage.rb'
 
 NUMBER_FORMAT = /^[a-z\d]{3}-*[a-z\d]{2}$/
 
@@ -249,13 +249,13 @@ end
 def show_station_and_trains
   station = select_from_collection(stations)
   puts "Trains on station #{station}:"
-  station.each_trains {|train| puts "Number train: #{train.number}, type train: #{train.type}, carriages: #{train.carriages.size}" }
+  station.each_train {|train| puts "Number train: #{train.number}, type train: #{train.type}, carriages: #{train.carriages.size}" }
 end
 
 def show_train_and_carriages
   train = select_from_collection(trains)
   puts "Carriages on train #{train}:"
-  train.each_carriages do |carriage| 
+  train.each_carriage do |carriage| 
     puts "Number carriage: #{carriage.number_carriages}, type carriage: #{carriage.type},
     free place(volume): #{carriage.free_volume}, occupied place(volume): #{carriage.occupied_volume}"
   end

@@ -1,5 +1,5 @@
-class PassengerCarriages < Carriages
-  def initialize(number_carriages, volume)
+class PassengerCarriage < Carriage
+  def initialize(number_carriage, volume)
     super
     @type = :passenger
     validate!
@@ -13,7 +13,8 @@ class PassengerCarriages < Carriages
   private
 
   def validate!
-    super
+    errors = []
     errors << "Place must be integer number" if volume.class != Integer
+    super(errors)
   end
 end
