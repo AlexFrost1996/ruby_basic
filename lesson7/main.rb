@@ -1,42 +1,46 @@
-require_relative 'manufacturer.rb'
-require_relative 'instance_counter.rb'
-require_relative 'validate.rb'
-require_relative 'station.rb'
-require_relative 'route.rb'
-require_relative 'train.rb'
-require_relative 'passenger_train.rb'
-require_relative 'cargo_train.rb'
-require_relative 'carriages.rb'
-require_relative 'passenger_carriages.rb'
-require_relative 'cargo_carriages.rb'
+# frozen_string_literal: true
 
-NUMBER_FORMAT = /^[a-z\d]{3}-*[a-z\d]{2}$/
+require_relative 'manufacturer'
+require_relative 'instance_counter'
+require_relative 'validate'
+require_relative 'station'
+require_relative 'route'
+require_relative 'train'
+require_relative 'passenger_train'
+require_relative 'cargo_train'
+require_relative 'carriage'
+require_relative 'passenger_carriage'
+require_relative 'cargo_carriage'
+
+NUMBER_TRAIN_FORMAT = /^[a-z\d]{3}-*[a-z\d]{2}$/.freeze
+
+NUMBER_CARRIAGE_FORMAT = /^[a-z\d]{1}[a-z\d]{1}*$/i.freeze
 
 MENU = [
-  {index: 1, title: "create new station", action: :create_new_station},
-  {index: 2, title: "create new train", action: :create_new_train},
-  {index: 3, title: "create new carriage", action: :create_new_carriage},  
-  {index: 4, title: "create new route and manage on it", action: :manage_route},
-  {index: 5, title: "set route for train", action: :set_route_for_train},
-  {index: 6, title: "add carriages to the train", action: :add_carriages_to_train},
-  {index: 7, title: "remove carriages from the train", action: :remove_carriages_from_train},
-  {index: 8, title: "move train on the route", action: :move_train_on_route},
-  {index: 9, title: "show stations and trains at the station", action: :show_station_and_trains},
-  {index: 10, title: "show train and carriages on train", action: :show_train_and_carriages},
-  {index: 11, title: "take place in carriage", action: :take_place},
-  {index: 12, title: "occupy volume in carriage", action: :occupy_volume}
-]
+  { index: 1, title: "create new station", action: :create_new_station },
+  { index: 2, title: "create new train", action: :create_new_train },
+  { index: 3, title: "create new carriage", action: :create_new_carriage },
+  { index: 4, title: "create new route and manage on it", action: :manage_route },
+  { index: 5, title: "set route for train", action: :set_route_for_train },
+  { index: 6, title: "add carriages to the train", action: :add_carriages_to_train },
+  { index: 7, title: "remove carriages from the train", action: :remove_carriages_from_train },
+  { index: 8, title: "move train on the route", action: :move_train_on_route },
+  { index: 9, title: "show stations and trains at the station", action: :show_station_and_trains },
+  { index: 10, title: "show train and carriages on train", action: :show_train_and_carriages },
+  { index: 11, title: "take place in carriage", action: :take_place },
+  { index: 12, title: "occupy volume in carriage", action: :occupy_volume }
+].freeze
 
 MENU_ROUTE = [
-  {index: 1, title: "create new route", action: :create_new_route},
-  {index: 2, title: "add station on route", action: :add_station},
-  {index: 3, title: "delete station on route", action: :delete_station}
-]
+  { index: 1, title: "create new route", action: :create_new_route },
+  { index: 2, title: "add station on route", action: :add_station },
+  { index: 3, title: "delete station on route", action: :delete_station }
+].freeze
 
 MENU_MOVE_TRAIN = [
-  {index: 1, title: "move train or route to next station", action: :move_train_forward},
-  {index: 2, title: "move train on route to previous station", action: :move_train_back}
-]
+  { index: 1, title: "move train or route to next station", action: :move_train_forward },
+  { index: 2, title: "move train on route to previous station", action: :move_train_back }
+].freeze
 
 def create_new_station
   puts "Enter name of new object class station: "
@@ -46,9 +50,7 @@ def create_new_station
     puts "Enter name of the new station: "
     name = gets.chomp.to_sym
     station = Station.new(name)
-  
     puts "Created new station #{station}" if station.valid?
-
   rescue RuntimeError => e
     puts "Invalid data for the station! Error(s): #{e}"
     puts "Repeat enter data for the station"
@@ -68,21 +70,21 @@ def get_type
   puts "Enter 1 for create passenger [train/carriage]"
   puts "Enter 2 for create cargo [train/carriage]"
   choise = gets.chomp.to_i
-  return choise
-  raise "Invalid enter! Please, repeat!" unless ((choise == 1) ^ (choise == 2))
+  raise "Invalid enter! Please, repeat!" unless (choise == 1) ^ (choise == 2)
 rescue RuntimeError => e
   puts e
   retry
+  choise
 end
 
 def get_number
   puts "Enter number of the new train"
   number = gets.chomp.to_s
-  return number
-  raise "Invalid number! Please, repeat!" if number !~ NUMBER_FORMAT
+  raise "Invalid number! Please, repeat!" if number !~ NUMBER_TRAIN_FORMAT
 rescue RuntimeError => e
   puts e
   retry
+  number
 end
 
 def create_train(train, type, number)
@@ -105,46 +107,54 @@ def create_new_carriage
 end
 
 def get_number_carriage
-  puts "Enter number of the new carriage"
-  number = gets.chomp.to_s
-  return number
-  raise "Invalid number! Please, repeat!" if number !~ /^[a-z\d][a-z\d]*$/i
-rescue RuntimeError => e
-  puts e
-  retry
+  begin
+    puts "Enter number of the new carriage"
+    number = gets.chomp.to_s
+    raise "Invalid number! Please, repeat!" if number !~ NUMBER_CARRIAGE_FORMAT
+  rescue RuntimeError => e
+    puts e
+    retry
+  end
+  number
 end
 
 def get_volume(type)
   case type
   when 1
-    begin
-      puts "Please enter number place"
-      volume = gets.chomp.to_i
-      raise "Invalid number place" if volume < 1
-    rescue RuntimeError => e
-      puts e
-      retry
-    end
-    volume
+    get_place!
   when 2
-    begin
-      puts "Please enter volume"
-      volume = gets.chomp.to_f
-      raise "Invalid volume" if volume <= 0
-    rescue RuntimeError => e
-      puts e
-      retry
-    end
-    volume
+    get_volume!
   end
+end
+
+def get_place!
+  puts "Please enter number place"
+  volume = gets.chomp.to_i
+  raise "Invalid number place" if volume < 1
+rescue RuntimeError => e
+  puts e
+  retry
+  volume
+end
+
+def get_volume!
+  begin
+    puts "Please enter volume"
+    volume = gets.chomp.to_f
+    raise "Invalid volume" if volume <= 0
+  rescue RuntimeError => e
+    puts e
+    retry
+  end
+  volume
 end
 
 def create_carriage(carriage, type, number, volume)
   case type
   when 1
-    carriage = PassengerCarriages.new(number, volume)
+    carriage = PassengerCarriage.new(number, volume)
   when 2
-    carriage = CargoCarriages.new(number, volume)
+    carriage = CargoCarriage.new(number, volume)
   end
   puts "Created new carriage: #{carriage}"
 end
@@ -165,11 +175,11 @@ end
 
 def manage_route
   puts "Enter your choice"
-  MENU_ROUTE.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  MENU_ROUTE.each { |item| puts "#{item[:index]}: #{item[:title]}" }
   choice = gets.chomp.to_i
-  need_item = MENU_ROUTE.find{|item| item[:index] == choice}
+  need_item = MENU_ROUTE.find { |item| item[:index] == choice }
   send(need_item[:action])
-end  
+end
 
 def create_new_route
   puts "Enter name new object class route"
@@ -228,9 +238,9 @@ end
 
 def move_train_on_route
   puts "Enter your choice"
-  MENU_MOVE_TRAIN.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  MENU_MOVE_TRAIN.each { |item| puts "#{item[:index]}: #{item[:title]}" }
   choice = gets.chomp.to_i
-  need_item = MENU_MOVE_TRAIN.find{|item| item[:index] == choice}
+  need_item = MENU_MOVE_TRAIN.find { |item| item[:index] == choice }
   send(need_item[:action])
 end
 
@@ -249,13 +259,15 @@ end
 def show_station_and_trains
   station = select_from_collection(stations)
   puts "Trains on station #{station}:"
-  station.each_trains {|train| puts "Number train: #{train.number}, type train: #{train.type}, carriages: #{train.carriages.size}" }
+  station.each_trains do |train|
+    puts "Number train: #{train.number}, type train: #{train.type}, carriages: #{train.carriages.size}"
+  end
 end
 
 def show_train_and_carriages
   train = select_from_collection(trains)
   puts "Carriages on train #{train}:"
-  train.each_carriages do |carriage| 
+  train.each_carriages do |carriage|
     puts "Number carriage: #{carriage.number_carriages}, type carriage: #{carriage.type},
     free place(volume): #{carriage.free_volume}, occupied place(volume): #{carriage.occupied_volume}"
   end
@@ -263,9 +275,9 @@ end
 
 loop do
   puts "Enter your choice"
-  MENU.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  MENU.each { |item| puts "#{item[:index]}: #{item[:title]}" }
   choice = gets.chomp.to_i
-  need_item = MENU.find{|item| item[:index] == choice}
+  need_item = MENU.find { |item| item[:index] == choice }
   send(need_item[:action])
   puts "Enter any key for continue or '0' for exit"
   break unless gets.chomp.to_i.zero?
