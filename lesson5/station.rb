@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 class Station
   include InstanceCounter
-  attr_reader :trains, :name 
+  attr_reader :trains, :name
+
   @@stations = []
 
   def self.all

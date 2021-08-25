@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 class Carriages
-  include Manufacturer, Validate
+  include Validate
+  include Manufacturer
   attr_reader :type
-  TYPE = [:passenger, :cargo]
+
+  TYPE = %i[passenger cargo].freeze
 
   def initialize(type)
     @type = type
@@ -11,6 +15,6 @@ class Carriages
   private
 
   def validate!
-    raise "Invalid type of carriage!" unless TYPE.include?(self.type)
+    raise "Invalid type of carriage!" unless TYPE.include?(type)
   end
 end

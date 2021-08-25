@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 class Train
-  include Manufacturer, InstanceCounter
+  include InstanceCounter
+  include Manufacturer
   attr_reader :number, :carriages, :route
   attr_accessor :speed
+
   @@trains = []
 
   def self.find(number)
-    @@trains.each{|train| train.number == number}
+    @@trains.each { |train| train.number == number }
   end
-  
-  def initialize (number)
+
+  def initialize(number)
     @number = number
     @carriages = []
     @speed = 0
@@ -47,6 +51,7 @@ class Train
 
   def move_forward
     return unless next_station
+
     current_station.send_train(self)
     next_station.take_train(self)
     @current_station_index += 1
@@ -54,12 +59,14 @@ class Train
 
   def move_back
     return unless previous_station
+
     current_station.send_train(self)
     previous_station.take_train(self)
     @current_station_index -= 1
   end
 
   private
-  #The user will be able to change the route without resorting to the corresponding method
+
+  # The user will be able to change the route without resorting to the corresponding method
   attr_writer :route
 end

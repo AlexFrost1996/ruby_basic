@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 array = []
 num = 10
 
@@ -6,4 +8,4 @@ while num <= 100
   num += 5
 end
 
-puts "#{array}"
+puts array.to_s

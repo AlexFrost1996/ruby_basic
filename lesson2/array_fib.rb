@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 array_fib = [0, 1]
 loop do
   next_fib = array_fib[-1] + array_fib[-2]
@@ -5,4 +7,4 @@ loop do
   break if next_fib >= 100
 end
 
-puts "#{array_fib}"
+puts array_fib.to_s

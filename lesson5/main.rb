@@ -1,20 +1,22 @@
-require_relative 'station.rb'
-require_relative 'route.rb'
-require_relative 'train.rb'
-require_relative 'passenger_train.rb'
-require_relative 'cargo_train.rb'
-require_relative 'carriages.rb'
+# frozen_string_literal: true
+
+require_relative 'station'
+require_relative 'route'
+require_relative 'train'
+require_relative 'passenger_train'
+require_relative 'cargo_train'
+require_relative 'carriages'
 
 MENU = [
-  {index: 1, title: "create new station", action: :create_new_station},
-  {index: 2, title: "create new train", action: :create_new_train},
-  {index: 3, title: "create new route and manage on it", action: :create_new_route},
-  {index: 4, title: "set route for train", action: :set_route_for_train},
-  {index: 5, title: "add carriages to the train", action: :add_carriages_to_train},
-  {index: 6, title: "remove carriages from the train", action: :remove_carriages_from_train},
-  {index: 7, title: "move train on the route", action: :move_train_on_route},
-  {index: 8, title: "view the list of stations and the list of trains at the station", action: :view_station_and_trains}
-]
+  { index: 1, title: "create new station", action: :create_new_station },
+  { index: 2, title: "create new train", action: :create_new_train },
+  { index: 3, title: "create new route and manage on it", action: :create_new_route },
+  { index: 4, title: "set route for train", action: :set_route_for_train },
+  { index: 5, title: "add carriages to the train", action: :add_carriages_to_train },
+  { index: 6, title: "remove carriages from the train", action: :remove_carriages_from_train },
+  { index: 7, title: "move train on the route", action: :move_train_on_route },
+  { index: 8, title: "view stations and trains at the station", action: :view_station_and_trains }
+].freeze
 
 def create_new_station
   puts "Enter name of new Class station: "
@@ -37,11 +39,12 @@ def create_new_train
   puts "Enter type of the new train: "
   type_train = gets.chomp.to_sym
 
-  if type_train == :passenger
+  case type_train
+  when :passenger
     name_class_train = PassengerTrain.new(name_train)
     puts name_class_train
-    
-  elsif type_train == :cargo
+
+  when :cargo
     name_class_train = CargoTrain.new(name_train)
     puts name_class_train
 
@@ -55,7 +58,8 @@ def create_new_route
   puts "Enter 'manage' for manage the station on route"
   user_choise = gets.chomp.to_sym
 
-  if user_choise == :new
+  case user_choise
+  when :new
     puts "Enter name new class route"
     name_class_route = gets.chomp
     puts "Enter first station on route"
@@ -65,19 +69,20 @@ def create_new_route
     name_class_route = Route.new(first_station, last_station)
     puts name_class_route
 
-  elsif user_choise == :manage
+  when :manage
     puts "Enter 'add' for add station on route"
     puts "Enter 'delete' for delete station on route"
     user_choise = gets.chomp.to_sym
 
-    if user_choise == :add
+    case user_choise
+    when :add
       puts "Enter name class new station on route"
       name_class_station = gets.chomp
       puts "Enter route for add station"
       changed_route = gets.chomp
       changed_route.add_station(name_class_station)
 
-    elsif user_choise == :delete
+    when :delete
       puts "Enter name class station for delete"
       name_class_station = gets.chomp
       puts "Enter route for delete station on it"
@@ -88,7 +93,7 @@ def create_new_route
       puts "Error!"
     end
   end
-end  
+end
 
 def set_route_for_train
   puts "Enter name class train for set route"
@@ -123,16 +128,17 @@ def move_train_on_route
   puts "Enter 'back' for move to previous station"
   user_choise = gets.chomp.to_sym
 
-  if user_choise == :forward
+  case user_choise
+  when :forward
     puts "Enter name class train for move to next station"
     name_class_train = gets.chomp
     name_class_train.move_forward
-    
-  elsif user_choise == :back
+
+  when :back
     puts "Enter name class train for move to previous station"
     name_class_train = gets.chomp
     name_class_train.move_back
-    
+
   else
     puts "Error!"
   end
@@ -149,9 +155,9 @@ end
 
 loop do
   puts "Enter your choice"
-  MENU.each{|item| puts "#{item[:index]}: #{item[:title]}"}
+  MENU.each { |item| puts "#{item[:index]}: #{item[:title]}" }
   choice = gets.chomp.to_i
-  need_item = MENU.find{|item| item[:index] == choice}
+  need_item = MENU.find { |item| item[:index] == choice }
   send(need_item[:action])
   puts "Enter any key for continue or 'exit' for exit"
   break if gets.chomp.to_sym == :exit

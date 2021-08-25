@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 class Station
-  include InstanceCounter, Validate
-  attr_reader :trains, :name 
+  include Validate
+  include InstanceCounter
+  attr_reader :trains, :name
+
   @@stations = []
 
   def self.all
@@ -23,7 +27,7 @@ class Station
   end
 
   def each_train(&block)
-    trains.each{|train| yield(train)}
+    trains.each(&block)
   end
 
   private

@@ -1,34 +1,10 @@
-=begin
-Класс Train (Поезд):
-Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов, 
-эти данные указываются при создании экземпляра класса
-
-Может набирать скорость
-
-Может возвращать текущую скорость
-
-Может тормозить (сбрасывать скорость до нуля)
-
-Может возвращать количество вагонов
-
-Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает 
-или уменьшает количество вагонов). Прицепка/отцепка вагонов может осуществляться только если 
-поезд не движется.
-
-Может принимать маршрут следования (объект класса Route). 
-При назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте.
-
-Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад, 
-но только на 1 станцию за раз.
-
-Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
-=end
+# frozen_string_literal: true
 
 class Train
   attr_reader :number, :type, :carriages
   attr_accessor :speed, :route
-  
-  def initialize (number, type, carriages)
+
+  def initialize(number, type, carriages)
     @number = number
     @type = type
     @carriages = carriages
@@ -67,6 +43,7 @@ class Train
 
   def move_forward
     return unless next_station
+
     current_station.send_train(self)
     next_station.take_train(self)
     @current_station_index += 1
@@ -74,6 +51,7 @@ class Train
 
   def move_back
     return unless previous_station
+
     current_station.send_train(self)
     previous_station.take_train(self)
     @current_station_index -= 1

@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 class Route
-  include InstanceCounter, Validate
+  include Validate
+  include InstanceCounter
   attr_reader :stations
 
   def initialize(start_station, finish_station)
@@ -16,14 +19,14 @@ class Route
   end
 
   def view_route
-    stations.each{|station| puts station.name}
+    stations.each { |station| puts station.name }
   end
 
   private
-  
+
   attr_writer :stations
 
   def validate!
     raise "Station can't be nil!" if stations.any?(nil)
-  end 
+  end
 end

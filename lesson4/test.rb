@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 station1 = Station.new(:london)
 station2 = Station.new(:wales)
 station3 = Station.new(:liverpool)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 print "Please, input size the base of triangle: "
 base = gets.to_f
 

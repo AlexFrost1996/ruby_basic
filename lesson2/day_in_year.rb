@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 print "Enter number day: "
 day = gets.chomp.to_i
 
@@ -9,11 +11,11 @@ year = gets.chomp.to_i
 
 months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 30]
 
-leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0
-if leap 
+leap = (year % 4).zero? && year % 100 != 0 || (year % 400).zero?
+if leap
   months[1] = 29
   puts "This year is leap"
 end
 
-number_day = months.take(month-1).sum + day
+number_day = months.take(month - 1).sum + day
 puts "Number this day in year is: #{number_day}"

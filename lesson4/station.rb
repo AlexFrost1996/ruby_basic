@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Station
-  attr_reader :trains, :name 
-  
+  attr_reader :trains, :name
+
   def initialize(name)
     @name = name
     @trains = []

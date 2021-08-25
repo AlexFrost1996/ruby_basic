@@ -1,14 +1,4 @@
-=begin
-Класс Route (Маршрут):
-Имеет начальную и конечную станцию, а также список промежуточных станций. Начальная и конечная
-станции указываютсся при создании маршрута, а промежуточные могут добавляться между ними.
-
-Может добавлять промежуточную станцию в список
-
-Может удалять промежуточную станцию из списка
-
-Может выводить список всех станций по-порядку от начальной до конечной
-=end
+# frozen_string_literal: true
 
 class Route
   attr_accessor :stations
@@ -26,6 +16,6 @@ class Route
   end
 
   def view_route
-    stations.each{|station| puts station.name}
+    stations.each { |station| puts station.name }
   end
 end
