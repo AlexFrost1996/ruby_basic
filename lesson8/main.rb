@@ -98,13 +98,13 @@ class Main
   def create_train(type, number)
     case type
     when 1
-      @trains <<  PassengerTrain.new(number)
+      @trains << PassengerTrain.new(number)
     when 2
       @trains << CargoTrain.new(number)
     end
     puts "Created new train with number: #{number}"
   end
-  
+
   def get_number_carriage
     puts "Enter number of the new carriage"
     number = gets.chomp.to_s
@@ -141,10 +141,11 @@ class Main
   def add_new_carriage
     train = select_from_collection(@trains)
     number = get_number_carriage
-    if train.is_a?(PassengerTrain)
+    case train
+    when PassengerTrain
       place = get_place
       train.add_carriage(PassengerCarriage.new(number, place))
-    elsif train.is_a?(CargoTrain)
+    when CargoTrain
       volume = get_volume
       train.add_carriage(CargoCarriage.new(number, volume))
     end
@@ -248,6 +249,7 @@ class Main
     show_collection(collection)
     index = gets.to_i - 1
     return if index.negative?
+
     collection[index]
   end
 end

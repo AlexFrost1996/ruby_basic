@@ -6,7 +6,7 @@ class Carriage
   attr_reader :type, :number_carriage, :volume, :occupied_volume
 
   NUMBER_CARRIAGE_FORMAT = /^[a-z\d]{1}[a-z\d]{1}?$/i.freeze
-  
+
   def initialize(number_carriage, volume)
     @number_carriages = number_carriage
     @volume = volume

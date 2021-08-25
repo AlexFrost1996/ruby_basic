@@ -26,3 +26,4 @@ Style/StringLiterals:
 
 Naming/AccessorMethodName:
   Enabled: false
+  
